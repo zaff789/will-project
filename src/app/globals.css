@@ -1,26 +1,277 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+  The Will — design tokens (DESIGN.md §2).
+  Trust-tech + human warmth: warm paper base, deep ink, ONE muted-gold accent.
+  No SaaS gradients, no bright semantics, no playful color.
+*/
+
+@theme {
+  /* Surfaces — warm, calm, spacious */
+  --color-paper: #f6f2ea;        /* page background, warm off-white */
+  --color-surface: #fffdf9;      /* cards */
+  --color-surface-sunk: #efe9dd; /* sunken wells */
+
+  /* Ink — deep warm charcoal-navy */
+  --color-ink: #232b30;
+  --color-ink-soft: #515b62;
+  --color-muted: #8c8678;        /* warm grey for secondary text */
+  --color-line: #e4ddcf;         /* hairline borders */
+
+  /* The single warm accent — muted gold. Used sparingly. */
+  --color-accent: #a9824c;
+  --color-accent-soft: #c6a877;
+  --color-accent-wash: #f0e7d6;
+
+  /* Restrained semantics — never bright. */
+  --color-calm: #5b6e63;         /* muted sage, "safe / ok" */
+  --color-warn: #9a6a3c;         /* warm amber, "attention" */
+  --color-danger: #8f4f43;       /* muted terracotta, "destructive" */
+
+  /* Type — serif for gravity+warmth (headings), sans for body. Thai-capable. */
+  --font-serif: var(--font-noto-serif-thai), Georgia, serif;
+  --font-sans: var(--font-ibm-plex-thai), system-ui, sans-serif;
+  /* Elegant Latin display for hero / threshold moments only.
+     A/B: swap to var(--font-cormorant) for the high-contrast alternative. */
+  --font-display: var(--font-fraunces), Georgia, serif;
+
+  /* Warm-dark "threshold" atmosphere — sacred edges only (landing, onboarding
+     opening, recipient's final moment). Deep warm ink → single warm gold light. */
+  --color-night: #15100b;        /* deepest warm espresso-ink */
+  --color-night-2: #221811;      /* warm ink, lifted */
+  --color-glow: #e6b274;         /* warm gold light source */
+  --color-ember: #c98a4e;        /* deeper amber edge */
+  --color-night-ink: #f3e7d4;    /* warm off-white text on night */
+  --color-night-soft: #b8a690;   /* muted warm text on night */
+
+  /* Soft, deliberate radii */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  /* Thai needs generous line-height for stacked tone marks (DESIGN.md §6). */
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+/* Craft touches: warm selection, smooth in-page scroll, visible keyboard focus. */
+::selection {
+  background: var(--color-accent-wash);
+  color: var(--color-ink);
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Slow, soft, deliberate motion (DESIGN.md §2). No fun, no pop. */
+@media (prefers-reduced-motion: no-preference) {
+  .motion-drawer {
+    transition: opacity 420ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+}
+
+/* Quiet hairline used across cards/wells */
+.hairline {
+  border: 1px solid var(--color-line);
+}
+
+/* ---------------------------------------------------------------------------
+   Threshold atmosphere — warm-dark sacred-edge screens (landing, onboarding
+   opening, recipient final moment). A deep warm ink base with a single warm
+   gold light blooming through a "threshold", plus film grain and slow drift.
+--------------------------------------------------------------------------- */
+.atmosphere {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--color-night);
+  /* A deliberate DOORWAY of light, not a nebula:
+     1) left shadow scrim so text always sits in shadow (contrast),
+     2) the warm portal of light right-of-centre,
+     3) a soft floor bloom beneath the doorway,
+     4) a top vignette to seat the light,
+     5) the warm-ink base. */
+  background-image:
+    /* left shadow scrim so text always sits in shadow (contrast) */
+    linear-gradient(95deg, rgba(12, 8, 5, 0.9) 0%, rgba(12, 8, 5, 0.45) 32%, transparent 55%),
+    /* the luminous warm portal of light, right-of-centre */
+    radial-gradient(15% 40% at 70% 41%, rgba(255, 238, 208, 0.72), rgba(245, 208, 152, 0.1) 52%, transparent 70%),
+    /* a soft vertical shaft spilling down from the doorway */
+    radial-gradient(6% 54% at 70% 56%, rgba(255, 240, 212, 0.34), transparent 76%),
+    /* floor bloom where the light lands */
+    radial-gradient(26% 12% at 70% 86%, rgba(232, 186, 122, 0.26), transparent 72%),
+    /* warm-ink base */
+    linear-gradient(180deg, #1a120c 0%, #140f0a 56%, #0d0905 100%);
+  background-repeat: no-repeat;
+  color: var(--color-night-ink);
+}
+/* The bright core of the doorway, slowly breathing (the "threshold"). */
+.atmosphere::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(6% 24% at 70% 44%, rgba(255, 247, 228, 0.88), transparent 62%),
+    radial-gradient(12% 7% at 70% 64%, rgba(255, 236, 202, 0.42), transparent 72%);
+  filter: blur(5px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .atmosphere::before {
+    animation: threshold-drift 16s ease-in-out infinite alternate;
+  }
+}
+@keyframes threshold-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); opacity: 0.85; }
+  to   { transform: translate3d(-1.5%, -2%, 0) scale(1.06); opacity: 1; }
+}
+
+/* On narrow screens, push the doorway to the right edge and widen the shadow
+   scrim so hero text always stays in shadow (contrast). */
+@media (max-width: 640px) {
+  .atmosphere {
+    background-image:
+      linear-gradient(100deg, rgba(12, 8, 5, 0.94) 0%, rgba(12, 8, 5, 0.6) 52%, transparent 80%),
+      radial-gradient(26% 36% at 87% 40%, rgba(255, 238, 208, 0.7), rgba(245, 208, 152, 0.1) 52%, transparent 72%),
+      radial-gradient(11% 50% at 87% 56%, rgba(255, 240, 212, 0.32), transparent 78%),
+      radial-gradient(34% 12% at 87% 86%, rgba(232, 186, 122, 0.24), transparent 74%),
+      linear-gradient(180deg, #1a120c 0%, #140f0a 56%, #0d0905 100%);
+  }
+  .atmosphere::before {
+    background:
+      radial-gradient(10% 22% at 87% 43%, rgba(255, 247, 228, 0.86), transparent 62%);
+  }
+}
+
+/* Film grain overlay — subtle, premium. Use on a child element with .grain. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Cinematic slow drift on hero imagery — makes stills feel like living footage
+   (Posh-like aliveness, kept gentle). Applied to the active carousel image. */
+@media (prefers-reduced-motion: no-preference) {
+  .kenburns {
+    transform-origin: 60% 40%;
+    animation: kenburns 14s ease-out both;
+  }
+}
+@keyframes kenburns {
+  from {
+    transform: scale(1.015);
+  }
+  to {
+    transform: scale(1.11) translate(-1.5%, -1.5%);
+  }
+}
+
+/* Continuous gentle drift for always-visible people photos (cards, thumbnails),
+   and a soft fade-up reveal as content scrolls into view. Both reduced-motion safe
+   (under no-preference only; otherwise content is simply shown). */
+@media (prefers-reduced-motion: no-preference) {
+  .kenburns-loop {
+    transform-origin: 55% 40%;
+    animation: kenburns-loop 24s ease-in-out infinite alternate;
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 760ms ease,
+      transform 760ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+}
+@keyframes kenburns-loop {
+  from {
+    transform: scale(1.02);
+  }
+  to {
+    transform: scale(1.09) translate(-1.5%, 1%);
+  }
+}
+
+/* Conditional-release flow: a data-flow pulse travels the connectors, and the
+   secure node glows. Futuristic-but-gentle. Reduced-motion → static. */
+@media (prefers-reduced-motion: no-preference) {
+  .flow-dot {
+    animation: flow-dot 2.6s ease-in-out infinite;
+  }
+  .pulse-ring {
+    animation: pulse-ring 2.8s ease-out infinite;
+  }
+}
+@keyframes flow-dot {
+  0% { transform: translateY(0); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(36px); opacity: 0; }
+}
+@keyframes pulse-ring {
+  0% { transform: scale(0.85); opacity: 0.45; }
+  70% { transform: scale(1.7); opacity: 0; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+/* Soft "aurora" depth — slow-moving warm light fields behind onboarding content.
+   Adds a living, advanced feel without leaving the warm palette. */
+.aurora {
+  position: relative;
+  isolation: isolate;
+}
+.aurora::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  z-index: -1;
+  background:
+    radial-gradient(38% 32% at 22% 20%, color-mix(in srgb, var(--ob-accent, #c6a877) 26%, transparent), transparent 70%),
+    radial-gradient(34% 30% at 82% 30%, rgba(201, 168, 106, 0.22), transparent 70%),
+    radial-gradient(40% 34% at 70% 84%, color-mix(in srgb, var(--ob-accent, #c6a877) 18%, transparent), transparent 72%);
+  filter: blur(20px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .aurora::before {
+    animation: aurora-drift 26s ease-in-out infinite alternate;
+  }
+}
+@keyframes aurora-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(2%, -2%, 0) scale(1.08); }
 }

@@ -1,65 +1,112 @@
-import Image from "next/image";
+import Link from "next/link";
+import { PrototypeBanner } from "@/components/PrototypeBanner";
+import { HeroCarousel } from "@/components/HeroCarousel";
+import { MeaningfulMessages } from "@/components/MeaningfulMessages";
+import { Reveal } from "@/components/Reveal";
+import { SiteFooter } from "@/components/SiteFooter";
+import { BRAND } from "@/lib/content";
 
-export default function Home() {
+// Landing hero (Onboarding 0.1) — bright, warm, joyful theme. Smiling, elegant,
+// diverse people in a sunlit card; the product framed as celebrating life and
+// love rather than grief. Bilingual EN/TH.
+
+const HERO_IMAGES = ["/hero/1.png", "/hero/2.png", "/hero/3.png"];
+
+export default function LandingPage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="flex min-h-screen flex-col bg-paper text-ink">
+      <PrototypeBanner />
+
+      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">
+        <span className="font-display text-xl tracking-wide text-ink">
+          The Will
+        </span>
+        <nav className="flex items-center gap-5">
+          <Link
+            href="/stories"
+            className="text-sm text-ink-soft transition-colors duration-300 hover:text-ink"
+          >
+            เรื่องราว · Stories
+          </Link>
+          <Link
+            href="/signin"
+            className="text-sm text-ink-soft transition-colors duration-300 hover:text-ink"
+          >
+            เข้าสู่ระบบ · Sign in
+          </Link>
+        </nav>
+      </header>
+
+      <main className="mx-auto grid w-full max-w-6xl flex-1 grid-cols-1 items-center gap-10 px-6 pb-16 lg:grid-cols-2 lg:gap-14">
+        {/* Image card — first on mobile for emotional impact, right on desktop. */}
+        <div className="order-1 lg:order-2">
+          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl shadow-[0_30px_70px_-28px_rgba(120,80,40,0.45)] ring-1 ring-line sm:aspect-[5/4] lg:aspect-[4/5]">
+            <HeroCarousel images={HERO_IMAGES} objectPosition="center" />
+          </div>
+        </div>
+
+        {/* Text column. */}
+        <div className="order-2 lg:order-1">
+          <p className="text-[11px] font-medium uppercase tracking-[0.32em] text-accent">
+            For the ones you love
+          </p>
+
+          <h1 className="mt-5 font-display font-light leading-[0.92] tracking-tight text-ink text-[clamp(3rem,8vw,6rem)]">
+            The Will
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+
+          <p className="mt-6 max-w-md font-serif text-[22px] leading-relaxed text-ink">
+            ฝากข้อความสุดท้ายที่เต็มไปด้วยความสุข
+            <br />
+            ไว้ให้คนที่คุณรัก
+          </p>
+          <p className="mt-2 max-w-md text-[15px] leading-relaxed text-ink-soft">
+            Leave a last happy message for the ones you love — kept safe, opened
+            when the time is right.
+          </p>
+
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <Link
+              href="/onboarding"
+              className="inline-flex items-center justify-center rounded-full bg-accent px-8 py-3.5 text-[15px] font-medium text-paper transition-colors duration-300 hover:bg-[#946f3e]"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              เริ่มต้น · Begin
+            </Link>
+            <Link
+              href="/signin"
+              className="inline-flex items-center justify-center rounded-full border border-line px-8 py-3.5 text-[15px] font-medium text-ink transition-colors duration-300 hover:bg-surface"
             >
-              Learning
-            </a>{" "}
-            center.
+              ดูบัญชีตัวอย่าง · Demo accounts
+            </Link>
+          </div>
+
+          <p className="mt-10 text-[11px] tracking-wide text-muted">
+            {BRAND.clarifier} · not a legally executed will
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
       </main>
+
+      {/* Meaningful messages — emotional inspiration (photos + heartfelt notes). */}
+      <section className="border-t border-line bg-surface/40">
+        <div className="mx-auto w-full max-w-6xl px-6 py-16">
+          <Reveal>
+            <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-accent">
+              ตัวอย่างข้อความ · Messages people leave
+            </p>
+            <h2 className="mt-3 max-w-2xl font-display text-[clamp(1.9rem,4vw,2.75rem)] font-light leading-snug text-ink">
+              ถ้อยคำที่อยากเก็บไว้ ให้ถึงคนสำคัญในเวลาที่เหมาะสม
+            </h2>
+            <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-ink-soft">
+              ตัวอย่างความรู้สึกที่ผู้คนเลือกฝากไว้ — บางคำพูดมีค่าเกินกว่าจะปล่อยให้หายไป
+            </p>
+          </Reveal>
+          <div className="mt-10">
+            <MeaningfulMessages />
+          </div>
+        </div>
+      </section>
+
+      <SiteFooter />
     </div>
   );
 }

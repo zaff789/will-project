@@ -181,6 +181,19 @@ h1, h2, h3, h4 {
   font-family: var(--font-display);
 }
 
+/* Desktop backdrop for the mobile-first app column — on large screens the warm
+   field shows around the centered "phone view" so it reads as intentional. */
+.app-frame {
+  background: var(--color-paper);
+}
+@media (min-width: 1024px) {
+  .app-frame {
+    background:
+      radial-gradient(55% 45% at 50% 0%, var(--color-accent-wash), transparent 62%),
+      linear-gradient(180deg, #efe7d8 0%, #f3ede1 100%);
+  }
+}
+
 /* Cinematic slow drift on hero imagery — makes stills feel like living footage
    (Posh-like aliveness, kept gentle). Applied to the active carousel image. */
 @media (prefers-reduced-motion: no-preference) {
